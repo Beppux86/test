@@ -9,6 +9,8 @@ import java.util.Map;
 import org.apache.http.client.ClientProtocolException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.fabrick.bean.Account;
 import com.example.fabrick.bean.Creditor;
@@ -22,14 +24,16 @@ import com.example.fabrick.utils.Constants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootApplication
+@RestController
 public class FabrickApplication {
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT);
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ClientProtocolException, IOException {
 		SpringApplication.run(FabrickApplication.class, args);
 	}
 
+	@GetMapping("/sendMoney")
 	public static String sendMoney() throws IOException, ParseException {
 		String url = Constants.BASE_URL.concat(String.format(Constants.MONEY_TRANSFER, Constants.ACCOUNT_ID));
 		String jsonRequest = new ObjectMapper().writeValueAsString(getSampleRequest());
@@ -39,16 +43,19 @@ public class FabrickApplication {
 		return PostClient.sendPOST(url, headers, jsonRequest);
 	}
 	
+	@GetMapping("/getTransactions")
 	public static String getTransactions() throws ClientProtocolException, IOException {
 		String url = Constants.BASE_URL.concat(String.format(Constants.TRANSACTIONS, Constants.ACCOUNT_ID));
 		return GetClient.getCall(url, Constants.defaultHeaders);
 	}
 
+	@GetMapping("/getBalance")
 	public static String getBalance() throws ClientProtocolException, IOException {
 		String url = Constants.BASE_URL.concat(String.format(Constants.BALANCE, Constants.ACCOUNT_ID));
 		return GetClient.getCall(url, Constants.defaultHeaders);
 	}
 
+	@GetMapping("/getCashAccount")
 	public static String getCashAccount() throws ClientProtocolException, IOException {
 		String url = Constants.BASE_URL.concat(String.format(Constants.GET_CASH_ACCOUNT, Constants.ACCOUNT_ID));
 		return GetClient.getCall(url, Constants.defaultHeaders);

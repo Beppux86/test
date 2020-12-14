@@ -27,8 +27,6 @@ public class GetClient {
 				request.addHeader(header.getKey(), header.getValue());
 			}
 
-//			request.addHeader(HttpHeaders.USER_AGENT, "Googlebot");
-
 			CloseableHttpResponse response = httpClient.execute(request);
 
 			try {
